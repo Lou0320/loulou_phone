@@ -1,6 +1,6 @@
 # Le Loulou Phone
 
-> Jeu multijoueur en ligne développé pour le projet de Développement Web et Base de données.
+> Jeu multijoueur en ligne développé pour le projet de Développement Web et Base de données inspiré par le jeu Gartic Phone.
 
 ## Description (Français)
 
@@ -51,7 +51,7 @@ Si votre téléphone est sur le même réseau Wi‑Fi, entrez cette adresse dans
 
 ## The Loulou Phone (English)
 
-> Multiplayer online game developed as a Web & Database course final project.
+> Multiplayer online game developed as a Web & Database course final project inspire by the game Gartic Phone.
 
 ## Description (English)
 
