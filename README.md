@@ -8,6 +8,9 @@ Le Loulou Phone est un petit jeu web multijoueur où les joueurs interagissent e
 L'interface front-end (HTML/CSS/JS) et les assets graphiques ont été dessinés à la main par l'auteur et intégrés au projet.
 Le code serveur est entièrement réalisé en Python/Flask et utilise WebSocket (via Flask-SocketIO) pour la communication en temps réel.
 
+<img width="2048" height="1424" alt="Screenshot from 2026-03-04 10-40-33" src="https://github.com/user-attachments/assets/c44375b7-ada3-47c6-a3d0-9b8f510c57d9" />
+<img width="2048" height="1424" alt="Screenshot from 2026-03-04 10-40-57" src="https://github.com/user-attachments/assets/c367ed81-bd38-4226-ab8a-d242f3635967" />
+
 Caractéristiques principales :
 - Multijoueur en temps réel (Socket.IO)
 - Interface réalisée avec des assets dessinés à la main
