@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/images/duo.ico" type="image/x-icon">
+    <title>Loulou Phone</title>
+</head>
+<body>
+    <img src="../static/images/logo.png" alt="Logo" class="logo">
+    <h2>Bienvenue {{ username }} !</h2>
+    <br>
+    <p>Vous avez un total de {{ points }} ⭐ !</p>
+    <form action="/regles" method="GET">
+        <button type="submit">Règles du jeu</button>
+    </form>
+    <form action="/classement" method="GET">
+        <button type="submit">Voir le classement</button>
+    </form>
+    <form method="POST">
+        <button type="submit" name="create_group">Créer un groupe</button>
+    </form>
+
+    <form method="POST">
+        <input type="text" name="group_code" placeholder="Code du groupe" required>
+        <button type="submit" name="join_group">Rejoindre</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/game.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/images/duo.ico" type="image/x-icon">
+    <title>Loulou Phone</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <img src="../static/images/logo.png" alt="Logo" class="logo">
+    <h1>Le jeu commence !</h1>
+    <p>Code du groupe : {{ group_code }}</p>
+    <p>Votre ID : {{ player_id }}</p>
+    <p>Début dans <span id="countdown">5</span> secondes...</p>
+    <script>
+        var socket = io();
+
+        // Démarre le décompte immédiatement
+        let countdown = 5;
+        let countdownElement = document.getElementById("countdown");
+
+        let interval = setInterval(() => {
+            countdownElement.innerText = countdown;
+            countdown--;
+            if (countdown < 0) {
+                clearInterval(interval);
+                window.location.href = "/enter_sentence/{{ group_code }}";  // Redirection vers la page de phrase
+            }
+        }, 1000);
+
+        // Gestion de la redirection vers la page de phrase
+        socket.on("redirect_to_sentence", function(data) {
+            window.location.href = data.url;
+        });
+    </script>
+</body>
+</html>

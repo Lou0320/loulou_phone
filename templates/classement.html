@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/classement.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/images/duo.ico" type="image/x-icon">
+    <title>Loulou Phone</title>
+    <style>
+        .current-user {
+            background-color: #ffffcc;
+        }
+        table {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .rank {
+            font-weight: bold;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <h1>Classement des joueurs</h1>
+    <table>
+        <tr>
+            <th>Rang</th>
+            <th>Joueur</th>
+            <th>Étoiles</th>
+        </tr>
+        {% for user, points in ranking %}
+        <tr {% if user == current_user %}class="current-user"{% endif %}>
+            <td class="rank">{{ loop.index }}</td>
+            <td>{{ user }}</td>
+            <td>{{ points }} ⭐</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/home" class="button">Accueil</a>
+</body>
+</html>

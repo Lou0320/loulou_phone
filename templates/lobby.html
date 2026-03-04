@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/lobby.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/images/duo.ico" type="image/x-icon">
+    <title>Loulou Phone</title>
+</head>
+<body>
+<h2>Lobby - Code : {{ group_code }}</h2>
+<ul id="players-list">
+    {% for player in players %}
+        <li>{{ player }}</li>
+    {% endfor %}
+</ul>
+
+<button id="start-game" disabled>Commencer</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+<script>
+    var socket = io();
+
+    // Rejoindre le lobby avec WebSocket
+    socket.emit("join_lobby", {group_code: "{{ group_code }}"});
+
+    function updatePlayers() {
+        fetch("/lobby/{{ group_code }}/players")
+        .then(response => response.json())
+        .then(players => {
+            let list = document.getElementById("players-list");
+            list.innerHTML = "";
+            players.forEach(player => {
+                let li = document.createElement("li");
+                li.textContent = player;
+                list.appendChild(li);
+            });
+
+            let startButton = document.getElementById("start-game");
+            startButton.disabled = players.length < 4;
+        });
+    }
+
+    setInterval(updatePlayers, 2000); // Met à jour toutes les 2 secondes
+
+    document.getElementById("start-game").onclick = function() {
+        socket.emit("start_game", {group_code: "{{ group_code }}"});
+    };
+
+    // Écoute l'événement de redirection
+    socket.on("redirect_to_game", function(data) {
+        window.location.href = data.url;
+    });
+</script>
+</body>
+</html>

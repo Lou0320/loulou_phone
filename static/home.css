@@ -1,0 +1,82 @@
+body {
+    background: linear-gradient(135deg, #E6E6FA, #FFFACD);
+    font-family: 'Josefin Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+}
+
+h2 {
+    color: #5730b7;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #5730b7;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+form {
+    margin: 10px 0;
+    min-width: 300px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #E6E6FA;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #5730b7;
+}
+
+button {
+    width: 90%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #5730b7;
+    color: white;
+    transition: transform 0.2s, background-color 0.3s;
+    margin: 5px 0;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+[name="create_group"] {
+    background-color: #FFFACD;
+    color: #5730b7;
+}
+
+[name="join_group"] {
+    background-color: #FFFACD;
+    color: #5730b7;
+}
+
+.logo {
+    width: 200px;
+    margin-bottom: 20px;
+}

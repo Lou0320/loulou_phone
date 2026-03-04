@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/drawing.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/images/duo.ico" type="image/x-icon">
+    <title>Loulou Phone</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <img src="../static/images/logo.png" alt="Logo" class="logo">
+    <h1>Tour <span id="tour-number">{{ tours }}</span> : Dessinez</h1>
+    <h3>Phrase à dessiner : <span id="sentence-to-draw">{{ sentence }}</span></h3>
+    <div class="drawing-container">
+        <div class="star-decoration-left"></div>
+        <canvas id="canvas" width="500" height="500"></canvas>
+        <div class="star-decoration-right"></div>
+    </div>
+    <div>Temps restant : <span id="timer">40</span> secondes</div>
+    <p id="progress-info"></p>
+
+    <script>
+        const socket = io();
+        let countdown = 40;
+        let hasSubmitted = false;
+        const playerId = parseInt("{{ player_id }}");
+        const groupCode = "{{ group_code }}";
+        
+        // Join the room for this group code when the page loads
+        socket.emit("join_lobby", {
+            group_code: groupCode
+        });
+        
+        // Request the previous sentence if not provided in template
+        if (!document.getElementById("sentence-to-draw").textContent.trim() || 
+            document.getElementById("sentence-to-draw").textContent === "Phrase indisponible pour le moment.") {
+            socket.emit("get_previous_sentence", {
+                group_code: groupCode,
+                player_id: playerId
+            });
+        }
+        
+        // Receive the previous sentence
+        socket.on("previous_sentence", function(data) {
+            document.getElementById("sentence-to-draw").textContent = data.sentence;
+        });
+        
+        // Synchroniser le numéro du tour
+        socket.on("sync_tour", function(data) {
+            document.getElementById("tour-number").innerText = data.tours;
+        });
+        
+        // Afficher le progrès des joueurs
+        socket.on("progress_update", function(data) {
+            document.getElementById("progress-info").innerText = 
+                data.completed + " joueurs sur " + data.total + " ont terminé";
+        });
+        
+        // Passer à la page suivante quand tous les joueurs ont terminé
+        socket.on("all_completed", function(data) {
+            if (data.next_page === "guess") {
+                window.location.href = "/guess/" + groupCode;
+            } else if (data.next_page.startsWith("/fin")) {
+                window.location.href = data.next_page;
+            }
+        });
+
+        // Initialisation du canvas pour dessiner
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+
+        // Fonction pour dessiner sur le canvas
+        canvas.addEventListener("mousedown", function(e) {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener("mousemove", function(e) {
+            if (drawing) {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+        });
+
+        canvas.addEventListener("mouseup", function() {
+            drawing = false;
+        });
+        
+        canvas.addEventListener("mouseout", function() {
+            drawing = false;
+        });
+
+        // Fonction de décompte
+        const countdownInterval = setInterval(function() {
+            countdown--; // Diminue le temps restant
+            document.getElementById("timer").innerText = countdown; // Affiche le temps restant sur la page
+
+            if (countdown <= 0 && !hasSubmitted) {
+                clearInterval(countdownInterval); // Arrête le décompte
+                submitDrawing();
+            }
+        }, 1000);
+        
+        function submitDrawing() {
+            if (hasSubmitted) return;
+            
+            hasSubmitted = true;
+            // Sauvegarder l'image du canvas
+            const image_data = canvas.toDataURL("image/png");
+            
+            // Emission de l'image
+            socket.emit("drawing_submitted", {
+                group_code: groupCode,
+                drawing: image_data
+            });
+            
+            document.getElementById("progress-info").innerText = "Dessin soumis, en attente des autres joueurs...";
+        }
+    </script>
+</body>
+</html>

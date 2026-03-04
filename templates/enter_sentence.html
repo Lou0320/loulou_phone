@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/enter_sentence.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/images/duo.ico" type="image/x-icon">
+    <title>Loulou Phone</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <img src="../static/images/logo.png" alt="Logo" class="logo">
+    <h1>Tour <span id="tour-number">{{ tours }}</span> : Entrez une phrase</h1>
+    <p>Vous avez <span id="countdown">20</span> secondes pour entrer votre phrase.</p>
+    <input type="text" id="sentence" placeholder="Votre phrase" required>
+    <p id="progress-info"></p>
+    
+    <script>
+        const socket = io();
+        let countdown = 20;
+        let hasSubmitted = false;
+        const groupCode = "{{ group_code }}";
+        const playerId = parseInt("{{ player_id }}");
+        
+        // Join the room for this group code when the page loads
+        socket.emit("join_lobby", {
+            group_code: groupCode
+        });
+        
+        // Synchroniser le numéro du tour
+        socket.on("sync_tour", function(data) {
+            document.getElementById("tour-number").innerText = data.tours;
+        });
+        
+        // Afficher le progrès des joueurs
+        socket.on("progress_update", function(data) {
+            document.getElementById("progress-info").innerText = 
+                data.completed + " joueurs sur " + data.total + " ont terminé";
+        });
+        
+        // Passer à la page suivante quand tous les joueurs ont terminé
+        socket.on("all_completed", function(data) {
+            if (data.next_page === "drawing") {
+                window.location.href = "/drawing/" + groupCode;
+            }
+        });
+
+        // Fonction pour le décompte
+        const intervalId = setInterval(function() {
+            countdown--;
+            document.getElementById("countdown").textContent = countdown;
+
+            if (countdown <= 0 && !hasSubmitted) {
+                clearInterval(intervalId); // Arrêter le décompte
+                submitSentence();
+            }
+        }, 1000);
+        
+        function submitSentence() {
+            if (hasSubmitted) return;
+            
+            hasSubmitted = true;
+            const sentence = document.getElementById("sentence").value || "Pas d'inspiration...";
+            
+            socket.emit("sentence_finished", {
+                group_code: groupCode,
+                sentence: sentence
+            });
+            
+            document.getElementById("progress-info").innerText = "Phrase soumise, en attente des autres joueurs...";
+            document.getElementById("sentence").disabled = true;
+        }
+        
+        // Soumettre la phrase quand l'utilisateur appuie sur Entrée
+        document.getElementById("sentence").addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && !hasSubmitted) {
+                submitSentence();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+body {
+    background: linear-gradient(135deg, #E6E6FA, #FFFACD);
+    font-family: 'Josefin Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h2 {
+    color: #5730b7;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 300px;
+}
+
+input {
+    padding: 12px;
+    border: 2px solid #E6E6FA;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #5730b7;
+}
+
+button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+button[name="login"] {
+    background-color: #5730b7;
+    color: white;
+}
+
+button[name="register"] {
+    background-color: #FFFACD;
+    color: #5730b7;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.logo {
+    width: 200px;
+    margin-bottom: 20px;
+}

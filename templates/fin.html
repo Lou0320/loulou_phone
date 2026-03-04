@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fin.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='images/duo.ico') }}" type="image/x-icon">
+    <title>Loulou Phone</title>
+    <style>
+        .star-rating {
+            display: inline-block;
+        }
+        .star {
+            cursor: pointer;
+            font-size: 24px;
+            color: #ddd;
+        }
+        .star.active {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+    <h1>La phrase de {{players_list[current]}} était : "{{sentences_list[current]}}"</h1>  
+
+    {% for i in range(1, total_players) %}
+        <div class="content-box">
+            {% if (i%2)==1 %}
+                {% if (current + i)>(total_players-1) %}
+                    <p><strong>Le joueur {{players_list[(current+i)-(total_players)]}} a dessiné :</strong></p>
+                    <img src="{{ drawings_list[(i//2)*total_players + ((current+i)-(total_players))]}}" alt="Dessin" style="max-width: 300px;">
+                {% else %}
+                    <p><strong>Le joueur {{players_list[current + i]}} a dessiné :</strong></p>
+                    <img src="{{ drawings_list[(i//2)*total_players + (current+i)]}}" alt="Dessin" style="max-width: 300px;">
+                {% endif %}
+            {% else %}
+                {% if (current + i)>(total_players-1) %}
+                    <p><strong>Le joueur {{players_list[(current+i)-(total_players)]}} a deviné :</strong></p>
+                    <p><strong>Phrase :</strong> {{ sentences_list[(i//2)*total_players + ((current+i)-(total_players))] }}</p>
+                {% else %}
+                    <p><strong>Le joueur {{players_list[current+i]}} a deviné :</strong></p>
+                    <p><strong>Phrase :</strong> {{ sentences_list[(i//2)*total_players + (current+i)] }}</p>
+                {% endif %}
+            {% endif %}
+            <div class="star-rating" data-player="{{ players_list[(current+i)-(total_players)] if (current + i)>(total_players-1) else players_list[current + i] }}">
+                {% for star in range(5) %}
+                    <span class="star" data-value="{{ star + 1 }}">★</span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        document.querySelectorAll('.star-rating').forEach(container => {
+            const stars = container.querySelectorAll('.star');
+            const player = container.dataset.player;
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = star.dataset.value;
+                    // Activer les étoiles jusqu'à celle cliquée
+                    stars.forEach(s => {
+                        s.classList.toggle('active', s.dataset.value <= value);
+                    });
+                    // Envoyer le vote au serveur
+                    fetch('/vote', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            player: player,
+                            points: value
+                        })
+                    });
+                });
+            });
+        });
+    </script>
+
+    {% if current < (total_players - 1) %}
+        <a href="/fin/{{ group_code }}/{{ current+1 }}" class="button">Joueur Suivant</a>
+    {% else %}
+        <a href="/home" class="button">Terminer</a>
+    {% endif %}
+</body>
+</html>
