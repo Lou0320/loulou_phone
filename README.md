@@ -43,10 +43,6 @@ Par défaut le serveur écoute sur le port 8080 et affiche à l'exécution l'adr
 
 Si votre téléphone est sur le même réseau Wi‑Fi, entrez cette adresse dans le navigateur pour accéder au jeu.
 
-## Contribution
-- Les contributions sont bienvenues : issues, corrections, ou amélioration des assets.
-- Pour les modifications côté serveur, utiliser un environnement virtuel et tester localement.
-
 ## Remarques
 - Les assets sont dessinés à la main par l'auteur du projet.
 - Si vous rencontrez des problèmes pour accéder au serveur depuis un autre appareil, vérifiez que le pare-feu ne bloque pas le port 8080 et que les deux appareils sont bien sur le même réseau.
@@ -95,9 +91,6 @@ By default the server listens on port 8080 and prints the LAN address to use fro
 
 If your phone is on the same Wi‑Fi network, open that address in the browser to reach the game.
 
-## Contributing
-- Contributions are welcome: issues, fixes or asset improvements.
-- Use a virtual environment for server-side changes and test locally before submitting PRs.
 
 ## Notes
 - All graphical assets were hand-drawn by the project author.
